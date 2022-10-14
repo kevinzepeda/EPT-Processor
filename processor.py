@@ -57,7 +57,13 @@ def processFile():
     columns = ['AT&T_Site_Name','AT&T_Tech','State','Country','Region','Market','Vendor','CS POOL','PS POOL','REGION CELULAR','Name_List']
     site_names = ['AT&T_Node_Name', 'Node_B_U2000', 'Node B U2000_Anterior']
 
-    dfo['Name_List'] = dfo.apply(lambda row: ','.join(row[site_names].tolist()), axis=1)
+    dfo = dfo.astype(str)
+    dfo = dfo.fillna('')
+
+    dfi = dfi.astype(str)
+    dfi = dfi.fillna('')
+    
+    dfo['Name_List'] = dfo.apply(lambda row: str(row[site_names].tolist()).replace("'",'').replace(' ','')[1:-1], axis=1)
     dfi['Name_List'] = dfi.apply(lambda row: str(row[site_names].tolist()).replace("'",'').replace(' ','')[1:-1], axis=1)
 
     dfo = dfo[columns]
@@ -73,7 +79,7 @@ def processFile():
     dfo['Type'] = 'Outdoor'
     dfi['Type'] = 'Indor'
 
-    pattern = r'(?:19\d{2}|20[01][0-9]|2020)[-.](?:0[1-9]|1[012])[-.](?:0[1-9]|[12][0-9]|3[01])'
+    pattern = r'(?:20\d{2}|20[01][0-9]|2020)[-.](?:0[1-9]|1[012])[-.](?:0[1-9]|[12][0-9]|3[01])'
 
     if re.search(pattern, root.filename):
         fileDate = ''.join(re.findall(pattern, root.filename))
