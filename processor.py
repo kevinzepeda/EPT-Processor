@@ -54,7 +54,7 @@ def processFile():
     dfi = pd.read_excel(sheets, 'EPT_3G_LTE_INDOOR')
     timestamp = os.path.getatime(root.filename)
     timestamp = datetime.fromtimestamp(timestamp)
-    columns = ['AT&T_Site_Name','AT&T_Tech','State','Country','Region','Market','Vendor','CS POOL','PS POOL','REGION CELULAR','Name_List']
+    columns = ['AT&T_Site_Name','AT&T_Tech','State','Country','Region','Vendor','CS POOL','PS POOL','REGION CELULAR','Name_List']
     site_names = ['AT&T_Node_Name', 'Node_B_U2000', 'Node B U2000_Anterior']
 
     dfo = dfo.astype(str)
@@ -78,6 +78,9 @@ def processFile():
 
     dfo['Type'] = 'Outdoor'
     dfi['Type'] = 'Indor'
+
+    dfo['AT&T_Tech'] = dfo['AT&T_Tech'].apply(lambda tech: tech if 'LTE' != tech else '4G')
+    dfi['AT&T_Tech'] = dfi['AT&T_Tech'].apply(lambda tech: tech if 'LTE' != tech else '4G')
 
     pattern = r'(?:20\d{2}|20[01][0-9]|2020)[-.](?:0[1-9]|1[012])[-.](?:0[1-9]|[12][0-9]|3[01])'
 
@@ -141,7 +144,7 @@ def processSelectedMun(sheets, deselect):
     dfi = dfi[dfi['Municipio'].isin(selectedMun)]
     timestamp = os.path.getatime(root.filename)
     timestamp = datetime.fromtimestamp(timestamp)
-    columns = ['AT&T_Site_Name','AT&T_Tech','State','Country','Region','Market','Vendor','CS POOL','PS POOL','REGION CELULAR','Name_List']
+    columns = ['AT&T_Site_Name','AT&T_Tech','State','Country','Region','Vendor','CS POOL','PS POOL','REGION CELULAR','Name_List']
     site_names = ['AT&T_Node_Name', 'Node_B_U2000', 'Node B U2000_Anterior']
 
     dfo['Name_List'] = dfo.apply(lambda row: str(row[site_names].tolist()).replace("'",'').replace(' ','')[1:-1], axis=1)
