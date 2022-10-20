@@ -86,14 +86,44 @@ def processFile():
 
     if re.search(pattern, root.filename):
         fileDate = ''.join(re.findall(pattern, root.filename))
-        dfo['FileDate'] = fileDate
-        dfi['FileDate'] = fileDate
+        dfo['Date'] = fileDate
+        dfi['Date'] = fileDate
     else:
-        dfo['FileDate'] = '-'
-        dfi['FileDate'] = '-'
+        dfo['Date'] = ''
+        dfi['Date'] = ''
 
-    dfo['TimeStamp'] = str(timestamp)
-    dfi['TimeStamp'] = str(timestamp)
+    dfo['REGION CELULAR'] = dfo['REGION CELULAR'].apply(lambda r: int(str(r)[:1]))
+    dfi['REGION CELULAR'] = dfi['REGION CELULAR'].apply(lambda r: int(str(r)[:1]))
+
+    rename = {
+        'CS POOL': "CS_Pool",
+        'PS POOL': "PS_Pool",
+        'REGION CELULAR': "Region_Cellular",
+        'Name_List': "NE_Name_List",
+        'Vendor_List': "NE_Vendor_List",
+    }
+
+    dfi.rename(columns=rename, inplace=True)
+    dfo.rename(columns=rename, inplace=True)
+
+    order = [
+        "Date",
+        "AT&T_Site_Name",
+        "AT&T_Tech",
+        "State",
+        "Country",
+        "Region",
+        "Vendor",
+        "Region_Cellular",
+        "CS_Pool",
+        "PS_Pool",
+        "NE_Name_List",
+        "NE_Vendor_List",
+        "Type",
+    ]
+
+    dfi = dfi[order]
+    dfo = dfo[order]
 
     df = pd.concat([dfo,dfi])
     df = df.drop_duplicates()
@@ -153,6 +183,9 @@ def processSelectedMun(sheets, deselect):
     dfo = dfo[columns]
     dfi = dfi[columns]
 
+    dfo['AT&T_Tech'] = dfo['AT&T_Tech'].apply(lambda tech: tech if 'LTE' != tech else '4G')
+    dfi['AT&T_Tech'] = dfi['AT&T_Tech'].apply(lambda tech: tech if 'LTE' != tech else '4G')
+
     dfo['Vendor_List'] = dfo['Vendor']
     dfo['Vendor'] = dfo['Vendor'].apply(lambda vendor: vendor if '(' not in vendor else vendor[:vendor.find(' (')])
     dfo['Vendor_List'] = dfo['Vendor_List'].apply(lambda vendor: vendor if '(' not in vendor else mapName(vendor[vendor.find('('):]))
@@ -167,14 +200,44 @@ def processSelectedMun(sheets, deselect):
 
     if re.search(pattern, root.filename):
         fileDate = ''.join(re.findall(pattern, root.filename))
-        dfo['FileDate'] = fileDate
-        dfi['FileDate'] = fileDate
+        dfo['Date'] = fileDate
+        dfi['Date'] = fileDate
     else:
-        dfo['FileDate'] = '-'
-        dfi['FileDate'] = '-'
+        dfo['Date'] = ''
+        dfi['Date'] = ''
 
-    dfo['TimeStamp'] = str(timestamp)
-    dfi['TimeStamp'] = str(timestamp)
+    dfo['REGION CELULAR'] = dfo['REGION CELULAR'].apply(lambda r: int(str(r)[:1]))
+    dfi['REGION CELULAR'] = dfi['REGION CELULAR'].apply(lambda r: int(str(r)[:1]))
+
+    rename = {
+        'CS POOL': "CS_Pool",
+        'PS POOL': "PS_Pool",
+        'REGION CELULAR': "Region_Cellular",
+        'Name_List': "NE_Name_List",
+        'Vendor_List': "NE_Vendor_List",
+    }
+
+    dfi.rename(columns=rename, inplace=True)
+    dfo.rename(columns=rename, inplace=True)
+
+    order = [
+        "Date",
+        "AT&T_Site_Name",
+        "AT&T_Tech",
+        "State",
+        "Country",
+        "Region",
+        "Vendor",
+        "Region_Cellular",
+        "CS_Pool",
+        "PS_Pool",
+        "NE_Name_List",
+        "NE_Vendor_List",
+        "Type",
+    ]
+
+    dfi = dfi[order]
+    dfo = dfo[order]
 
     df = pd.concat([dfo,dfi])
     df = df.drop_duplicates()
