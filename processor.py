@@ -86,6 +86,8 @@ def processFile():
 
     if re.search(pattern, root.filename):
         fileDate = ''.join(re.findall(pattern, root.filename))
+        fileDate = datetime.strptime(fileDate, '%Y-%m-%d').date()
+        fileDate = fileDate.strftime('%m/%d/%Y')
         dfo['Date'] = fileDate
         dfi['Date'] = fileDate
     else:
@@ -200,6 +202,8 @@ def processSelectedMun(sheets, deselect):
 
     if re.search(pattern, root.filename):
         fileDate = ''.join(re.findall(pattern, root.filename))
+        fileDate = datetime.strptime(fileDate, '%Y-%m-%d').date()
+        fileDate = fileDate.strftime('%m/%d/%Y')
         dfo['Date'] = fileDate
         dfi['Date'] = fileDate
     else:
